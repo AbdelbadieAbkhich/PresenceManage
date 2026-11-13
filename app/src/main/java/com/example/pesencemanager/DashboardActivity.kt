@@ -8,13 +8,18 @@ import android.text.method.LinkMovementMethod
 import android.text.util.Linkify
 import android.util.Log
 import android.view.GestureDetector
+import android.view.Menu
+import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
+import android.widget.Button
 import android.widget.ImageView
+import android.widget.PopupMenu
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.view.ActionMode
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 
@@ -29,6 +34,8 @@ class DashboardActivity: AppCompatActivity() {
         val cardAppel= findViewById<View>(R.id.FaireApple)
         val cardHistorique= findViewById<View>(R.id.historique)
         val cardstatistique= findViewById<View>(R.id.statisque)
+        val cab = findViewById<Button>(R.id.btncab)
+        val popup = findViewById<Button>(R.id.btnPopUp)
 
         cardGroupes.setOnClickListener {
             Log.d("TP03", "Clic simple sur Groupes")
@@ -81,6 +88,80 @@ class DashboardActivity: AppCompatActivity() {
         footer.setOnClickListener {
             afficherInfosDeveloppeur()
         }
+
+        cab.setOnClickListener {
+            if (actionMode == null){
+                actionMode = startSupportActionMode(cabCallback)
+            }
+        }
+
+        //utilise botton Pop-up
+        popup.setOnClickListener {
+            val popMenu = PopupMenu(this,popup)
+            popMenu.menuInflater.inflate(R.menu.popup , popMenu.menu)
+
+            popMenu.setOnMenuItemClickListener { item ->
+                when (item.itemId) {
+                    R.id.action_ouvrir_groupes ->{
+                        startActivity(Intent(this , GroupeActivity::class.java)
+                        )
+                        true
+                    }
+                    R.id.action_informations -> {
+                        AlertDialog.Builder(this)
+                            .setTitle("PrésenceManager")
+                            .setMessage(
+                                "Menu contextuel flottant du tableau de bord."
+                            )
+                            .setPositiveButton("OK", null)
+                            .show()
+                        true
+                    }
+                    else -> false
+                }
+            }
+            popMenu.show()
+        }
+    }
+    private  var actionMode : ActionMode? =null
+    private val cabCallback= object : ActionMode.Callback {
+        override fun onCreateActionMode(mode: ActionMode , menu: Menu) : Boolean{
+                mode.menuInflater.inflate(R.menu.menu_cab , menu)
+                mode.title = "Actions contextuelles"
+            return true
+        }
+
+
+        override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
+           when(item.itemId){
+               R.id.action_afficher -> {
+                   AlertDialog.Builder(this@DashboardActivity)
+                       .setTitle("CAB")
+                       .setMessage("Action Afficher exécutée.")
+                       .setPositiveButton("OK", null)
+                       .show()
+                   true
+               }
+               R.id.action_search -> Toast.makeText(this@DashboardActivity, "Recherche", Toast.LENGTH_SHORT).show()
+               R.id.action_share -> Toast.makeText(this@DashboardActivity, "Partager" , Toast.LENGTH_SHORT).show()
+               R.id.action_delete -> Toast.makeText(this@DashboardActivity,"Supprimer" , Toast.LENGTH_SHORT).show()
+               R.id.action_terminer -> {
+                   mode.finish()
+                   true
+               }
+               else -> false
+           }
+            mode.finish()
+            return true
+        }
+        override fun onDestroyActionMode(mode: ActionMode) {
+            actionMode = null
+        }
+
+        override fun onPrepareActionMode(
+            mode: ActionMode,
+            menu: Menu
+        ): Boolean = false
     }
 
    private fun afficherInfosDeveloppeur(){

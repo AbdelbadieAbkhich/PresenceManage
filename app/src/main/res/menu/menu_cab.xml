@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+        <item
+            android:id="@+id/action_search"
+            android:title="Recherche"
+            android:icon="@android:drawable/ic_menu_search"
+            app:showAsAction="always"/>
+        <item
+            android:id="@+id/action_share"
+            android:title="Partager"
+            android:icon="@android:drawable/ic_menu_share"
+            app:showAsAction="always"/>
+        <item
+            android:id="@+id/action_afficher"
+            android:title="Afficher"
+            app:showAsAction="ifRoom|withText" />
+        <item
+            android:id="@+id/action_delete"
+            android:title="Supprimer"
+            android:icon="@android:drawable/ic_menu_delete"
+            app:showAsAction="always"/>
+        <item
+            android:id="@+id/action_terminer"
+            android:title="Terminer"
+            app:showAsAction="never" />
+</menu>
